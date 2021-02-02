@@ -1,28 +1,26 @@
 import nodemailer from 'nodemailer';
 import { StatusCodes } from 'http-status-codes';
 
-import orm from './user_orm_repository';
+import userRepository from './user_orm_repository';
+import InvalidPasswordError from './InvalidPasswordError';
+import EmailAlreadyInUseError from './EmailAlreadyInUseError';
 
-async function createUser(res, password, name , email ) {
-    if (password.length <= 8 || !password.includes('_')) {
-        return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json('The password is not valid!');
-    }
-    if (userRepository.findByEmail(email) !== undefined) {
-        return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json('The email is already in use');
-    }
+async function createUser(res, password, name, email) {
+  if (password.length <= 8 || !password.includes('_')) {
+    throw new InvalidPasswordError();
+  }
+  if (userRepository.findByEmail(email) !== undefined) {
+    throw new EmailAlreadyInUseError();
+  }
 
-    const user = {
-        id: Math.floor(Math.random() * 99999),
-        name: name,
-        email: email,
-        password: password,
-    };
+  const user = {
+    id: Math.floor(Math.random() * 99999),
+    name: name,
+    email: email,
+    password: password,
+  };
 
-  orm.save(user);
+  userRepository.save(user);
 
   //Send a confirmation email
   const transporter = nodemailer.createTransport({
