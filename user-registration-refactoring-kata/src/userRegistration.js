@@ -3,24 +3,24 @@ import { StatusCodes } from 'http-status-codes';
 
 import orm from './user_orm_repository';
 
-async function createUser(req, res) {
-  if (req.body.password.length <= 8 || !req.body.password.includes('_')) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json('The password is not valid!');
-  }
-  if (orm.findByEmail(req.body.email) !== undefined) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json('The email is already in use');
-  }
+async function createUser(res, password, name , email ) {
+    if (password.length <= 8 || !password.includes('_')) {
+        return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json('The password is not valid!');
+    }
+    if (userRepository.findByEmail(email) !== undefined) {
+        return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json('The email is already in use');
+    }
 
-  const user = {
-    id: Math.floor(Math.random() * 99999),
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-  };
+    const user = {
+        id: Math.floor(Math.random() * 99999),
+        name: name,
+        email: email,
+        password: password,
+    };
 
   orm.save(user);
 
