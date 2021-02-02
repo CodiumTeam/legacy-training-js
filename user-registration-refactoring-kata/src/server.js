@@ -8,30 +8,24 @@ const server = express();
 
 server.use(express.json());
 
-const post = (path, callback) =>
-  server.post(path, (req, res, next) => callback(req, res).catch(next));
+server.post('/users', (req, res) => {
+  return createUser(req.body.password, req.body.name, req.body.email)
+    .then((user) => {
+      return res.status(StatusCodes.CREATED).json({ user });
+    })
+    .catch((err) => {
+      if (err instanceof InvalidPasswordError) {
+        return res
+          .status(StatusCodes.BAD_REQUEST)
+          .json('The password is not valid!');
+      } else if (err instanceof EmailAlreadyInUseError) {
+        return res
+          .status(StatusCodes.BAD_REQUEST)
+          .json('The email is already in use');
+      }
 
-post('/users', async (req, res) => {
-  return createUser(
-    res,
-    req.body.password,
-    req.body.name,
-    req.body.email
-  ).catch((err) => {
-    if (err instanceof InvalidPasswordError) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json('The password is not valid!');
-    } else if (err instanceof EmailAlreadyInUseError) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json('The email is already in use');
-    }
-  });
-});
-
-server.use((error, request, response) => {
-  return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message);
+      throw err;
+    });
 });
 
 export default server;
