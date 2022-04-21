@@ -1,8 +1,7 @@
-import nodemailer from 'nodemailer';
-
 import orm from './user_orm_repository';
 import InvalidPasswordError from './InvalidPasswordError';
 import EmailAlreadyInUseError from './EmailAlreadyInUseError';
+import sendEmail from './nodemailerEmailSender';
 
 async function createUser(password, name, email) {
   if (password.length <= 8 || !password.includes('_')) {
@@ -20,25 +19,12 @@ async function createUser(password, name, email) {
   };
 
   orm.save(user);
-
-  //Send a confirmation email
-  const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.email',
-    port: 465,
-    auth: {
-      user: '[USERNAME]',
-      pass: '[PASSWORD]',
-    },
-  });
-  // If a proper SMTP server is configured, this line could be uncommented
-  /**
-     await transporter.sendMail({
-    from: "noreply@codium.team",
+  await sendEmail({
+    from: 'noreply@codium.team',
     to: email,
-    subject: "Welcome to Codium",
-    html: "<h1>This is the confirmation email</h1>",
+    subject: 'Welcome to Codium',
+    body: '<h1>This is the confirmation email</h1>',
   });
-     */
 
   return user;
 }
