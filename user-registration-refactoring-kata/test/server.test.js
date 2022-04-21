@@ -1,7 +1,7 @@
-import server from '../src/server';
 import supertest from 'supertest';
-import userOrmRepository from '../src/user_orm_repository';
 import { StatusCodes } from 'http-status-codes';
+import server from '../src/server';
+import userOrmRepository from '../src/infrastructure/userOrmRepository';
 
 const USER_NAME = 'Codium';
 const USER_EMAIL = 'my@email.com';

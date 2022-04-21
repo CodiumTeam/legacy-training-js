@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import SendEmailError from './SendEmailError';
+import SendEmailError from '../domain/SendEmailError';
 
 async function emailSender({ from, to, subject, body }) {
   //Send a confirmation email

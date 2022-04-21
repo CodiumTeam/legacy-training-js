@@ -1,4 +1,4 @@
-import orm from './user_orm_repository';
+import orm from '../infrastructure/userOrmRepository';
 import InvalidPasswordError from './InvalidPasswordError';
 import EmailAlreadyInUseError from './EmailAlreadyInUseError';
 

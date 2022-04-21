@@ -1,9 +1,9 @@
 import express from 'express';
 import { StatusCodes } from 'http-status-codes';
-import userRegistration from './userRegistration';
-import InvalidPasswordError from './InvalidPasswordError';
-import EmailAlreadyInUseError from './EmailAlreadyInUseError';
-import sendEmail from './nodemailerEmailSender';
+import userRegistration from './domain/userRegistration';
+import InvalidPasswordError from './domain/InvalidPasswordError';
+import EmailAlreadyInUseError from './domain/EmailAlreadyInUseError';
+import sendEmail from './infrastructure/nodemailerEmailSender';
 
 const server = express();
 
