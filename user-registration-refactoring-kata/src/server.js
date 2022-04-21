@@ -1,14 +1,16 @@
 import express from 'express';
 import { StatusCodes } from 'http-status-codes';
-import createUser from './userRegistration';
+import userRegistration from './userRegistration';
 import InvalidPasswordError from './InvalidPasswordError';
 import EmailAlreadyInUseError from './EmailAlreadyInUseError';
+import sendEmail from './nodemailerEmailSender';
 
 const server = express();
 
 server.use(express.json());
 
 server.post('/users', (req, res) => {
+  const createUser = userRegistration(sendEmail);
   return createUser(req.body.password, req.body.name, req.body.email)
     .then((user) => {
       return res.status(StatusCodes.CREATED).json({ user });
